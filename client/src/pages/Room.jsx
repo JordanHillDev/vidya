@@ -1,4 +1,4 @@
-import { useEffect, useContext, useRef, useState } from "react";
+import { useEffect, useContext, useRef } from "react";
 import { useParams } from "react-router-dom";
 // Context
 import { RoomContext } from "../context/RoomContext";
@@ -9,13 +9,11 @@ import Header from "../components/Header";
 import VideoGrid from "../components/VideoGrid";
 import Footer from "../components/Footer";
 import Chat from "../components/chat/Chat";
-import Video from "../components/Video";
 // ws
 import { ws } from "../ws";
 
 const Room = () => {
-    const ref = useRef()
-    const [height, setHeight] = useState("100vh")
+    const ref = useRef();
     const { id } = useParams();
     const {
         stream,
@@ -37,22 +35,15 @@ const Room = () => {
         setRoomId(id || "");
     }, [id, setRoomId]);
 
-    useEffect(() => {
-        function resize() {
-            setHeight("100vh")
-        }
-
-        window.addEventListener('resize', resize)
-        return () => {
-            window.removeEventListener('resize', resize)
-        }
-    }, [])
-
     return (
-        <div ref={ref} className="max-h-screen grid grid-rows-grail grid-cols-grail" style={{maxHeight: "100vh", height: height}}>
-            <Header />
-            <VideoGrid />
-            <Chat />
+        <div
+            ref={ref}
+            className="max-h-screen grid grid-rows-grail grid-cols-grail"
+            style={{ maxHeight: "100vh", height: "100vh" }}
+        >
+            <Header roomId={id} />
+            <VideoGrid toggleChat={toggleChat} />
+            {chat.isChatOpen && <Chat />}
             <Footer />
         </div>
     );

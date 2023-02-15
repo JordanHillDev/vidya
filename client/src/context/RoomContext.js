@@ -150,8 +150,6 @@ export const RoomProvider = ({ children }) => {
         };
     }, [me, stream, userName]);
 
-    console.log({ peers });
-
     return (
         <RoomContext.Provider
             value={{
