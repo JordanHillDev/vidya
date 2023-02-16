@@ -1,14 +1,22 @@
-import { useRef, useContext } from "react";
+import { useRef, useContext, useEffect } from "react";
 import { RoomContext } from "../context/RoomContext";
 import useGridResize from "../hooks/useGridResize";
-import Video  from "./Video";
+import Video from "./Video";
 
 const VideoGrid = ({ toggleChat }) => {
     const { stream, screenStream, peers, shareScreen, screenSharingId } =
         useContext(RoomContext);
     const gridRef = useRef(null);
-    const [videoDimensions] = useGridResize(gridRef, toggleChat);
     const { [screenSharingId]: sharing, ...peersToShow } = peers;
+    const [videoDimensions, setVideoDimensions] = useGridResize(
+        gridRef,
+        toggleChat,
+        peersToShow
+    );
+
+    useEffect(() => {
+        setVideoDimensions("");
+    }, []);
 
     return (
         <div

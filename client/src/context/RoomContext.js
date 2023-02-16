@@ -24,8 +24,8 @@ export const RoomProvider = ({ children }) => {
     const { userName, userId } = useContext(UserContext);
     const [me, setMe] = useState();
     const [stream, setStream] = useState();
-    const [sharingVideo, setSharingVideo] = useState(false)
-    const [sharingAudio, setSharingAudio] = useState(false)
+    const [sharingVideo, setSharingVideo] = useState(false);
+    const [sharingAudio, setSharingAudio] = useState(false);
     const [screenStream, setScreenStream] = useState();
     const [screenSharingId, setScreenSharingId] = useState("");
     const [roomId, setRoomId] = useState();
@@ -73,6 +73,17 @@ export const RoomProvider = ({ children }) => {
 
     const nameChangedHandler = ({ peerId, userName }) => {
         dispatch(addPeerNameAction(peerId, userName));
+    };
+
+    const toggleStream = () => {
+        const track = stream.getTracks().find(track => track.kind === 'video')
+        if(track.enabled) {
+            track.enabled = false;
+            setSharingVideo(false)
+        } else {
+            track.enabled = true;
+            setSharingVideo(true)
+        }
     };
 
     useEffect(() => {
@@ -163,7 +174,8 @@ export const RoomProvider = ({ children }) => {
                 setRoomId,
                 screenSharingId,
                 sharingVideo,
-                sharingAudio
+                sharingAudio,
+                toggleStream,
             }}
         >
             {children}

@@ -42,7 +42,7 @@ const Room = () => {
             style={{ maxHeight: "100vh", height: "100vh" }}
         >
             <Header roomId={id} />
-            <VideoGrid toggleChat={toggleChat} />
+            <VideoGrid toggleChat={toggleChat}/>
             {chat.isChatOpen && <Chat />}
             <Footer />
         </div>

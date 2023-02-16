@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-export default function useGridResize(gridRef, toggleChat) {
+export default function useGridResize(gridRef, toggleChat, peersToShow) {
     const [gridDimensions, setGridDimensions] = useState({});
     const [videoDimensions, setVideoDimensions] = useState({});
     
@@ -21,7 +21,7 @@ export default function useGridResize(gridRef, toggleChat) {
         return () => {
             window.removeEventListener("resize", handleResize);
         };
-    }, [gridRef, toggleChat]); 
+    }, [gridRef, toggleChat, peersToShow]); 
 
     useEffect(() => {
         let max = 0;
@@ -60,5 +60,5 @@ export default function useGridResize(gridRef, toggleChat) {
         }
     }, [gridDimensions, margin, gridRef]);
 
-    return [videoDimensions]
+    return [videoDimensions, setVideoDimensions]
 }
