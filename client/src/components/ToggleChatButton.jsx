@@ -1,7 +1,9 @@
-
-const ChatButton = ({ toggleChat }) => {
+export const ToggleChatButton = ({ toggleChat }) => {
     return (
-        <button onClick={toggleChat} className="text-white rounded-full p-4 bg-purple-700 hover:bg-purple-600">
+        <button
+            onClick={toggleChat}
+            className="text-white rounded-full p-4 bg-purple-700 hover:bg-purple-600 mx-2"
+        >
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -19,5 +21,3 @@ const ChatButton = ({ toggleChat }) => {
         </button>
     );
 };
-
-export default ChatButton

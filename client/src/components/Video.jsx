@@ -1,9 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
+import { RoomContext } from "../context/RoomContext";
 // Components
 import NameInput from "./NameInput";
-import { NoStreamVideo } from "./NoStreamVideo";
 
 const Video = ({ stream, videoDimensions, userName }) => {
+    const { sharingVideo } = useContext(RoomContext);
     const videoRef = useRef();
 
     useEffect(() => {
@@ -12,10 +13,9 @@ const Video = ({ stream, videoDimensions, userName }) => {
         }
     }, [stream]);
 
-    console.log(stream);
     return (
         <div className="grid">
-            {stream && <video
+            <video
                 ref={videoRef}
                 autoPlay
                 playsInline
@@ -27,12 +27,11 @@ const Video = ({ stream, videoDimensions, userName }) => {
                     gridColumn: "1 / 2",
                     gridRow: "1 / 2",
                 }}
-            />}
-            {!stream && <NoStreamVideo videoDimensions={videoDimensions} />}
+            />
 
             <div className="flex col-start-1 col-end-2 row-start-1 row-end-2 self-end">
                 {userName && (
-                    <div className="bg-cyan-200 px-2 py-1 rounded-tr text-sm sm:text-xs">
+                    <div className="bg-cyan-200 px-2 py-1 rounded-tr text-sm sm:text-xs text-white">
                         {userName}
                     </div>
                 )}

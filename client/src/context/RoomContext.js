@@ -24,6 +24,8 @@ export const RoomProvider = ({ children }) => {
     const { userName, userId } = useContext(UserContext);
     const [me, setMe] = useState();
     const [stream, setStream] = useState();
+    const [sharingVideo, setSharingVideo] = useState(false)
+    const [sharingAudio, setSharingAudio] = useState(false)
     const [screenStream, setScreenStream] = useState();
     const [screenSharingId, setScreenSharingId] = useState("");
     const [roomId, setRoomId] = useState();
@@ -31,8 +33,6 @@ export const RoomProvider = ({ children }) => {
 
     const enterRoom = ({ roomId }) => {
         navigate(`/room/${roomId}`);
-
-       
     };
 
     const getUsers = ({ participants }) => {
@@ -87,6 +87,8 @@ export const RoomProvider = ({ children }) => {
             navigator.mediaDevices
                 .getUserMedia({ video: true, audio: true })
                 .then((stream) => {
+                    setSharingVideo(!!stream.getVideoTracks().length);
+                    setSharingAudio(!!stream.getAudioTracks().length);
                     setStream(stream);
                 });
         } catch (error) {
@@ -160,6 +162,8 @@ export const RoomProvider = ({ children }) => {
                 roomId,
                 setRoomId,
                 screenSharingId,
+                sharingVideo,
+                sharingAudio
             }}
         >
             {children}

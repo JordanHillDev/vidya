@@ -16,8 +16,6 @@ const VideoGrid = ({ toggleChat }) => {
             className="col-start-1 col-end-2 min-h-full flex flex-wrap justify-center content-start bg-stone-800"
         >
             <Video stream={stream} videoDimensions={videoDimensions} />
-            {/* <Video stream={stream} videoDimensions={videoDimensions} />
-            <Video stream={stream} videoDimensions={videoDimensions} /> */}
             {Object.values(peersToShow)
                 .filter((peer) => !!peer.stream)
                 .map((peer) => (
