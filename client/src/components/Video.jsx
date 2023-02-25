@@ -4,8 +4,8 @@ import { RoomContext } from "../context/RoomContext";
 import NameInput from "./NameInput";
 import { NoStreamPoster } from "./NoStreamPoster";
 
-const Video = ({ stream, videoDimensions, userName }) => {
-    const { sharingVideo } = useContext(RoomContext);
+const Video = ({ stream, videoDimensions, userName, sharingVideo }) => {
+  console.log(userName, sharingVideo)
     const videoRef = useRef();
 
     useEffect(() => {
@@ -19,8 +19,6 @@ const Video = ({ stream, videoDimensions, userName }) => {
             className="grid"
             style={{
                 position: "relative",
-                // height: videoDimensions.height,
-                // width: videoDimensions.width,
             }}
         >
             <video

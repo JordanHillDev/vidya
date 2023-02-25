@@ -10,6 +10,7 @@ export const ChatProvider = ({ children }) => {
         messages: [],
         isChatOpen: false,
     });
+    
     const sendMessage = (message, roomId, author) => {
         const messageData = {
             content: message,

@@ -8,6 +8,11 @@ export const UserProvider = ({ children }) => {
     const [userName, setUserName] = useState(
         localStorage.getItem("userName") || ""
     );
+    const [sharingVideo, setSharingVideo] = useState(true);
+
+    const toggleSharingVideo = () => {
+        setSharingVideo((curr) => !curr)
+    };
 
     useEffect(() => {
         localStorage.setItem("userName", userName);
@@ -18,7 +23,16 @@ export const UserProvider = ({ children }) => {
     }, [userId]);
 
     return (
-        <UserContext.Provider value={{ userId, userName, setUserName }}>
+        <UserContext.Provider
+            value={{
+                userId,
+                userName,
+                setUserName,
+                sharingVideo,
+                setSharingVideo,
+                toggleSharingVideo,
+            }}
+        >
             {children}
         </UserContext.Provider>
     );

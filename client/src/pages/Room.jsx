@@ -15,21 +15,14 @@ import { ws } from "../ws";
 const Room = () => {
     const ref = useRef();
     const { id } = useParams();
-    const {
-        stream,
-        screenStream,
-        peers,
-        shareScreen,
-        screenSharingId,
-        setRoomId,
-    } = useContext(RoomContext);
-    const { userName, userId } = useContext(UserContext);
+    const { stream, setRoomId } = useContext(RoomContext);
+    const { userName, userId, sharingVideo } = useContext(UserContext);
     const { toggleChat, chat } = useContext(ChatContext);
 
     useEffect(() => {
         if (stream)
-            ws.emit("join-room", { roomId: id, peerId: userId, userName });
-    }, [id, userId, stream, userName]);
+            ws.emit("join-room", { roomId: id, peerId: userId, userName, sharingVideo });
+    }, [id, userId, stream, userName, sharingVideo]);
 
     useEffect(() => {
         setRoomId(id || "");
@@ -42,7 +35,7 @@ const Room = () => {
             style={{ maxHeight: "100vh", height: "100vh" }}
         >
             <Header roomId={id} />
-            <VideoGrid toggleChat={toggleChat}/>
+            <VideoGrid toggleChat={toggleChat} />
             {chat.isChatOpen && <Chat />}
             <Footer />
         </div>

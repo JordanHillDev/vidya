@@ -14,6 +14,7 @@ import {
     addPeerNameAction,
     removePeerStreamAction,
     addAllPeersAction,
+    toggleSharingVideoAction,
 } from "../reducers/peerActions";
 import { UserContext } from "./UserContext";
 
@@ -21,11 +22,10 @@ export const RoomContext = createContext();
 
 export const RoomProvider = ({ children }) => {
     const navigate = useNavigate();
-    const { userName, userId } = useContext(UserContext);
+    const { userName, userId, sharingVideo, setSharingVideo } =
+        useContext(UserContext);
     const [me, setMe] = useState();
     const [stream, setStream] = useState();
-    const [sharingVideo, setSharingVideo] = useState(false);
-    const [sharingAudio, setSharingAudio] = useState(false);
     const [screenStream, setScreenStream] = useState();
     const [screenSharingId, setScreenSharingId] = useState("");
     const [roomId, setRoomId] = useState();
@@ -75,16 +75,24 @@ export const RoomProvider = ({ children }) => {
         dispatch(addPeerNameAction(peerId, userName));
     };
 
-    const toggleStream = () => {
-        const track = stream.getTracks().find(track => track.kind === 'video')
-        if(track.enabled) {
-            track.enabled = false;
-            setSharingVideo(false)
-        } else {
-            track.enabled = true;
-            setSharingVideo(true)
-        }
+    const showingVideoHandler = ({ peerId, showingVideo }) => {
+        dispatch(toggleSharingVideoAction(peerId, showingVideo));
     };
+
+    // const toggleStream = () => {
+    //     const track = stream.getTracks().find(track => track.kind === 'video')
+    //         track.enabled = !track.enabled;
+    //         setSharingVideo((curr) => !curr)
+    //         ws.emit("toggleShareVideo", {peerId: userId, })
+    // };
+
+    useEffect(() => {
+        ws.emit("toggle-showing-video", {
+            peerId: userId,
+            roomId,
+            sharingVideo,
+        });
+    }, [sharingVideo, userId, roomId]);
 
     useEffect(() => {
         ws.emit("change-name", { peerId: userId, userName, roomId });
@@ -99,7 +107,6 @@ export const RoomProvider = ({ children }) => {
                 .getUserMedia({ video: true, audio: true })
                 .then((stream) => {
                     setSharingVideo(!!stream.getVideoTracks().length);
-                    setSharingAudio(!!stream.getAudioTracks().length);
                     setStream(stream);
                 });
         } catch (error) {
@@ -112,6 +119,7 @@ export const RoomProvider = ({ children }) => {
         ws.on("user-started-sharing", (peerId) => setScreenSharingId(peerId));
         ws.on("user-stopped-sharing", () => setScreenSharingId(""));
         ws.on("name-changed", nameChangedHandler);
+        ws.on("toggled-showing-video", showingVideoHandler);
 
         return () => {
             ws.off("room-created");
@@ -137,18 +145,21 @@ export const RoomProvider = ({ children }) => {
         if (!me) return;
         if (!stream) return;
 
-        ws.on("user-joined", ({ peerId, userName: name }) => {
+        ws.on("user-joined", ({ peerId, userName: name, sharingVideo }) => {
+            
             const call = me.call(peerId, stream, {
                 metadata: {
                     userName,
+                    sharingVideo,
                 },
             });
             call.on("stream", (peerStream) => {
                 dispatch(addPeerStreamAction(peerId, peerStream));
+               
             });
             dispatch(addPeerNameAction(peerId, name));
         });
-
+      
         me.on("call", (call) => {
             const { userName } = call.metadata;
             dispatch(addPeerNameAction(call.peer, userName));
@@ -161,7 +172,7 @@ export const RoomProvider = ({ children }) => {
         return () => {
             ws.off("user-joined");
         };
-    }, [me, stream, userName]);
+    }, [me, stream, userName, sharingVideo]);
 
     return (
         <RoomContext.Provider
@@ -174,8 +185,6 @@ export const RoomProvider = ({ children }) => {
                 setRoomId,
                 screenSharingId,
                 sharingVideo,
-                sharingAudio,
-                toggleStream,
             }}
         >
             {children}
