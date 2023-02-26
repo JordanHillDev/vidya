@@ -8,7 +8,7 @@ export const UserProvider = ({ children }) => {
     const [userName, setUserName] = useState(
         localStorage.getItem("userName") || ""
     );
-    const [sharingVideo, setSharingVideo] = useState(true);
+    const [sharingVideo, setSharingVideo] = useState(false);
 
     const toggleSharingVideo = () => {
         setSharingVideo((curr) => !curr)

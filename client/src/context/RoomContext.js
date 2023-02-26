@@ -22,13 +22,16 @@ export const RoomContext = createContext();
 
 export const RoomProvider = ({ children }) => {
     const navigate = useNavigate();
+
     const { userName, userId, sharingVideo, setSharingVideo } =
         useContext(UserContext);
+
     const [me, setMe] = useState();
     const [stream, setStream] = useState();
     const [screenStream, setScreenStream] = useState();
     const [screenSharingId, setScreenSharingId] = useState("");
     const [roomId, setRoomId] = useState();
+
     const [peers, dispatch] = useReducer(peersReducer, {});
 
     const enterRoom = ({ roomId }) => {
@@ -75,24 +78,19 @@ export const RoomProvider = ({ children }) => {
         dispatch(addPeerNameAction(peerId, userName));
     };
 
-    const showingVideoHandler = ({ peerId, showingVideo }) => {
-        dispatch(toggleSharingVideoAction(peerId, showingVideo));
+    const showingVideoHandler = ({ peerId, sharingVideo }) => {
+        dispatch(toggleSharingVideoAction(peerId, sharingVideo));
     };
 
-    // const toggleStream = () => {
-    //     const track = stream.getTracks().find(track => track.kind === 'video')
-    //         track.enabled = !track.enabled;
-    //         setSharingVideo((curr) => !curr)
-    //         ws.emit("toggleShareVideo", {peerId: userId, })
-    // };
-
     useEffect(() => {
+        const tracks = stream?.getVideoTracks();
+        if (tracks) tracks.forEach((track) => (track.enabled = sharingVideo));
         ws.emit("toggle-showing-video", {
             peerId: userId,
             roomId,
             sharingVideo,
         });
-    }, [sharingVideo, userId, roomId]);
+    }, [sharingVideo, userId, roomId, stream]);
 
     useEffect(() => {
         ws.emit("change-name", { peerId: userId, userName, roomId });
@@ -145,21 +143,18 @@ export const RoomProvider = ({ children }) => {
         if (!me) return;
         if (!stream) return;
 
-        ws.on("user-joined", ({ peerId, userName: name, sharingVideo }) => {
-            
+        ws.on("user-joined", ({ peerId, userName: name }) => {
             const call = me.call(peerId, stream, {
                 metadata: {
                     userName,
-                    sharingVideo,
                 },
             });
             call.on("stream", (peerStream) => {
                 dispatch(addPeerStreamAction(peerId, peerStream));
-               
             });
             dispatch(addPeerNameAction(peerId, name));
         });
-      
+
         me.on("call", (call) => {
             const { userName } = call.metadata;
             dispatch(addPeerNameAction(call.peer, userName));

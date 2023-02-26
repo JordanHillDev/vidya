@@ -3,7 +3,6 @@ import { v4 as uuidV4 } from "uuid";
 const rooms = {};
 const chats = {};
 
-
 export const roomHandler = (socket) => {
     const createRoom = () => {
         const roomId = uuidV4();
@@ -15,10 +14,18 @@ export const roomHandler = (socket) => {
         if (!rooms[roomId]) rooms[roomId] = {};
         if (!chats[roomId]) chats[roomId] = [];
         socket.emit("get-messages", chats[roomId]);
-        console.log("user joined the room", roomId, peerId, userName, sharingVideo);
+        console.log(
+            "user joined the room",
+            roomId,
+            peerId,
+            userName,
+            sharingVideo
+        );
         rooms[roomId][peerId] = { peerId, userName, sharingVideo };
         socket.join(roomId);
-        socket.to(roomId).emit("user-joined", { peerId, userName });
+        socket
+            .to(roomId)
+            .emit("user-joined", { peerId, userName, sharingVideo });
         socket.emit("get-users", {
             roomId,
             participants: rooms[roomId],
@@ -60,14 +67,14 @@ export const roomHandler = (socket) => {
         }
     };
 
-    const toggleShowingVideo = ({ peerId, roomId, sharingVideo}) => {
-        if(rooms[roomId] && rooms[roomId][peerId]) {
-            rooms[roomId][peerId].sharingVideo = sharingVideo
-            socket.to(roomId).emit("toggled-showing-video", { peerId, sharingVideo}) 
+    const toggleShowingVideo = ({ peerId, roomId, sharingVideo }) => {
+        if (rooms[roomId] && rooms[roomId][peerId]) {
+            rooms[roomId][peerId].sharingVideo = sharingVideo;
+            socket
+                .to(roomId)
+                .emit("toggled-showing-video", { peerId, sharingVideo });
         }
-    }
-
-    
+    };
 
     socket.on("create-room", createRoom);
     socket.on("join-room", joinRoom);
@@ -75,6 +82,5 @@ export const roomHandler = (socket) => {
     socket.on("stop-sharing", stopSharing);
     socket.on("send-message", addMessage);
     socket.on("change-name", changeName);
-    socket.on("toggle-showing-video", toggleShowingVideo)
+    socket.on("toggle-showing-video", toggleShowingVideo);
 };
-

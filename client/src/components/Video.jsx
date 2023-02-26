@@ -5,7 +5,6 @@ import NameInput from "./NameInput";
 import { NoStreamPoster } from "./NoStreamPoster";
 
 const Video = ({ stream, videoDimensions, userName, sharingVideo }) => {
-  console.log(userName, sharingVideo)
     const videoRef = useRef();
 
     useEffect(() => {

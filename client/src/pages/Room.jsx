@@ -16,13 +16,13 @@ const Room = () => {
     const ref = useRef();
     const { id } = useParams();
     const { stream, setRoomId } = useContext(RoomContext);
-    const { userName, userId, sharingVideo } = useContext(UserContext);
+    const { userName, userId } = useContext(UserContext);
     const { toggleChat, chat } = useContext(ChatContext);
 
     useEffect(() => {
         if (stream)
-            ws.emit("join-room", { roomId: id, peerId: userId, userName, sharingVideo });
-    }, [id, userId, stream, userName, sharingVideo]);
+            ws.emit("join-room", { roomId: id, peerId: userId, userName });
+    }, [id, userId, stream, userName]);
 
     useEffect(() => {
         setRoomId(id || "");
