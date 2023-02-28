@@ -1,6 +1,10 @@
-import { createContext, useEffect, useReducer } from "react";
+import { createContext, useEffect, useReducer, useState } from "react";
 import { chatReducer } from "../reducers/chatReducer";
-import { addMessageAction, addHistoryAction, toggleChatAction, } from "../reducers/chatActions";
+import {
+    addMessageAction,
+    addHistoryAction,
+    toggleChatAction,
+} from "../reducers/chatActions";
 import { ws } from "../ws";
 
 export const ChatContext = createContext();
@@ -10,7 +14,9 @@ export const ChatProvider = ({ children }) => {
         messages: [],
         isChatOpen: false,
     });
-    
+
+    const [unread, setUnread] = useState(false);
+
     const sendMessage = (message, roomId, author) => {
         const messageData = {
             content: message,
@@ -18,7 +24,6 @@ export const ChatProvider = ({ children }) => {
             author,
         };
         chatDispatch(addMessageAction(messageData));
-
         ws.emit("send-message", roomId, messageData);
     };
 
@@ -32,22 +37,30 @@ export const ChatProvider = ({ children }) => {
 
     const toggleChat = () => {
         chatDispatch(toggleChatAction(!chat.isChatOpen));
+        setUnread(false);
     };
 
     useEffect(() => {
         ws.on("add-message", addMessage);
         ws.on("get-messages", addHistory);
+
         return () => {
             ws.off("add-message", addMessage);
             ws.off("get-messages", addHistory);
         };
     }, []);
+
+    useEffect(() => {
+        if (!chat.isChatOpen) setUnread(true);
+    }, [chat.messages]);
+
     return (
         <ChatContext.Provider
             value={{
                 chat,
                 toggleChat,
                 sendMessage,
+                unread,
             }}
         >
             {children}

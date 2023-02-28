@@ -20,7 +20,7 @@ export default function useGridResize(gridRef, toggleChat, peers) {
         return () => {
             window.removeEventListener("resize", handleResize);
         };
-    }, [gridRef, toggleChat, peers]);
+    }, [gridRef, toggleChat, peers.length]);
 
     useEffect(() => {
         let max = 0;

@@ -94,7 +94,7 @@ export const RoomProvider = ({ children }) => {
 
     useEffect(() => {
         ws.emit("change-name", { peerId: userId, userName, roomId });
-    }, [userName, userId, roomId]);
+    }, [userName]);
 
     useEffect(() => {
         const peer = new Peer(userId);

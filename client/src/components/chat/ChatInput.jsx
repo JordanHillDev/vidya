@@ -21,7 +21,7 @@ const ChatInput = () => {
             <form onSubmit={handleSubmit}>
                 <div className="flex gap-2">
                     <textarea
-                        className="border rounded-md p-1"
+                        className="border rounded-md p-1 resize-none"
                         onChange={(e) => setMessage(e.target.value)}
                         value={message}
                         onKeyDown={(e) => {
