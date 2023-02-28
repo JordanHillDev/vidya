@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
 
-const NameInput = () => {
+const NameInput = ({style}) => {
     const { userName, setUserName } = useContext(UserContext);
 
     return (
@@ -10,6 +10,7 @@ const NameInput = () => {
             placeholder="Enter your name"
             onChange={(e) => setUserName(e.target.value)}
             value={userName}
+            style={style}
         />
     );
 };

@@ -3,6 +3,7 @@ import { RoomContext } from "../context/RoomContext";
 import { UserContext } from "../context/UserContext";
 import useGridResize from "../hooks/useGridResize";
 import Video from "./Video";
+import NameInput from "./NameInput";
 
 const VideoGrid = ({ toggleChat }) => {
     const { stream, peers, screenSharingId } = useContext(RoomContext);
@@ -28,6 +29,7 @@ const VideoGrid = ({ toggleChat }) => {
                 stream={stream}
                 videoDimensions={videoDimensions}
                 sharingVideo={sharingVideo}
+                isMe={true}
             />
             {Object.values(peers)
                 .filter((peer) => !!peer.stream)

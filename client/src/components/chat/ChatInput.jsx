@@ -10,22 +10,27 @@ const ChatInput = () => {
     const { userId } = useContext(UserContext);
     const { roomId } = useContext(RoomContext);
 
+    function handleSubmit(e) {
+        e.preventDefault();
+        sendMessage(message, roomId, userId);
+        setMessage("");
+    }
+
     return (
         <div className="border-zinc-700">
-            <form
-                onSubmit={(e) => {
-                    e.preventDefault();
-                    sendMessage(message, roomId, userId);
-                    setMessage("");
-                }}
-            >
-                <div className="flex">
+            <form onSubmit={handleSubmit}>
+                <div className="flex gap-2">
                     <textarea
-                        className="border"
+                        className="border rounded-md p-1"
                         onChange={(e) => setMessage(e.target.value)}
                         value={message}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                handleSubmit(e);
+                            }
+                        }}
                     />
-                    <Button type="submit" className="py-2 px-8">
+                    <Button type="submit" className="py-1 px-6">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"

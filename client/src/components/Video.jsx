@@ -4,7 +4,7 @@ import { RoomContext } from "../context/RoomContext";
 import NameInput from "./NameInput";
 import { NoStreamPoster } from "./NoStreamPoster";
 
-const Video = ({ stream, videoDimensions, userName, sharingVideo }) => {
+const Video = ({ stream, videoDimensions, userName, sharingVideo, isMe }) => {
     const videoRef = useRef();
 
     useEffect(() => {
@@ -36,9 +36,12 @@ const Video = ({ stream, videoDimensions, userName, sharingVideo }) => {
             {!sharingVideo && <NoStreamPoster videoDimensions={videoDimensions} />}
             <div className="flex col-start-1 col-end-2 row-start-1 row-end-2 self-end">
                 {userName && (
-                    <div className="bg-cyan-200 px-2 py-1 rounded-tr text-sm sm:text-xs text-white">
+                    <div className="bg-stone-800 px-2 py-1 rounded-tr text-sm sm:text-xs text-white z-10">
                         {userName}
                     </div>
+                )}
+                {isMe && (
+                    <NameInput  style={{width: "200px"}}/>
                 )}
             </div>
         </div>

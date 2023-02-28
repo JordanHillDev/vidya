@@ -19,7 +19,6 @@ export const roomHandler = (socket) => {
             roomId,
             peerId,
             userName,
-            sharingVideo
         );
         rooms[roomId][peerId] = { peerId, userName, sharingVideo };
         socket.join(roomId);
@@ -30,7 +29,6 @@ export const roomHandler = (socket) => {
             roomId,
             participants: rooms[roomId],
         });
-
         socket.on("disconnect", () => {
             console.log("user left the room", peerId);
             leaveRoom({ roomId, peerId });

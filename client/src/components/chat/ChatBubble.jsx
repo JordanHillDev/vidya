@@ -20,14 +20,14 @@ const ChatBubble = ({ message }) => {
         >
             <div className="flex flex-col">
                 <div
-                    className={classNames("inline-block py-2 px-4 rounded", {
-                        "bg-red-200": isSelf,
-                        "bg-red-300": !isSelf,
+                    className={classNames("inline-block py-2 px-4 rounded font-bold max-w-xs", {
+                        "bg-sky-500": isSelf,
+                        "bg-emerald-500": !isSelf,
                     })}
                 >
                     {message.content}
                     <div
-                        className={classNames("text-xs text-white opacity-50", {
+                        className={classNames("text-xs text-black opacity-70", {
                             "text-right": isSelf,
                             "text-left": !isSelf,
                         })}
@@ -36,7 +36,7 @@ const ChatBubble = ({ message }) => {
                     </div>
                 </div>
                 <div
-                    className={classNames("text-md text-black", {
+                    className={classNames("text-md text-white", {
                         "text-right": isSelf,
                         "text-left": !isSelf,
                     })}

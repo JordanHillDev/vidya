@@ -31,7 +31,7 @@ const Room = () => {
     return (
         <div
             ref={ref}
-            className="max-h-screen grid grid-rows-grail grid-cols-grail"
+            className="max-h-screen grid grid-rows-grail grid-cols-grail bg-stone-800"
             style={{ maxHeight: "100vh", height: "100vh" }}
         >
             <Header roomId={id} />

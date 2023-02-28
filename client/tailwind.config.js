@@ -4,15 +4,15 @@ module.exports = {
     theme: {
         extend: {
             rotate: {
-                '20': '20deg',
-              },
+                20: "20deg",
+            },
             gridTemplateColumns: {
-                'grail': '1fr auto'
+                grail: "1fr auto",
             },
             gridTemplateRows: {
-                'grail': 'auto 1fr auto'
-            }
+                grail: "auto 1fr auto",
+            },
         },
     },
-    plugins: [],
+    plugins: [require("tailwind-scrollbar-hide")],
 };
