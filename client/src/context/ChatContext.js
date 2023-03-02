@@ -51,7 +51,7 @@ export const ChatProvider = ({ children }) => {
     }, []);
 
     useEffect(() => {
-        if (!chat.isChatOpen) setUnread(true);
+        if (!chat.isChatOpen && !!chat.messages.length) setUnread(true);
     }, [chat.messages]);
 
     return (

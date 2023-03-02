@@ -13,7 +13,7 @@ import Chat from "../components/chat/Chat";
 import { ws } from "../ws";
 
 const Room = () => {
-    const ref = useRef();
+    // const ref = useRef();
     const { id } = useParams();
     const { stream, setRoomId } = useContext(RoomContext);
     const { userName, userId } = useContext(UserContext);
@@ -22,7 +22,7 @@ const Room = () => {
     useEffect(() => {
         if (stream)
             ws.emit("join-room", { roomId: id, peerId: userId, userName });
-    }, [id, userId, stream, userName]);
+    }, [stream]);
 
     useEffect(() => {
         setRoomId(id || "");
@@ -30,7 +30,7 @@ const Room = () => {
 
     return (
         <div
-            ref={ref}
+            // ref={ref}
             className="max-h-screen grid grid-rows-grail grid-cols-grail bg-stone-800"
             style={{ maxHeight: "100vh", height: "100vh" }}
         >

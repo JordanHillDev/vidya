@@ -14,12 +14,7 @@ export const roomHandler = (socket) => {
         if (!rooms[roomId]) rooms[roomId] = {};
         if (!chats[roomId]) chats[roomId] = [];
         socket.emit("get-messages", chats[roomId]);
-        console.log(
-            "user joined the room",
-            roomId,
-            peerId,
-            userName,
-        );
+        console.log("user joined the room", roomId, peerId, userName);
         rooms[roomId][peerId] = { peerId, userName, sharingVideo };
         socket.join(roomId);
         socket

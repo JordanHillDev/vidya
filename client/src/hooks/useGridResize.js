@@ -4,9 +4,15 @@ export default function useGridResize(gridRef, toggleChat, peers) {
     const [gridDimensions, setGridDimensions] = useState({});
     const [videoDimensions, setVideoDimensions] = useState({});
 
-    let margin = 10;
+    let margin = 0;
 
+
+    // Sets Grid Dimensions when resized, chat is toggled, or peers number changes
     useEffect(() => {
+        window.addEventListener("resize", handleResize);
+        
+        handleResize();
+
         function handleResize() {
             setGridDimensions({
                 height: gridRef.current.offsetHeight,
@@ -14,14 +20,12 @@ export default function useGridResize(gridRef, toggleChat, peers) {
             });
         }
 
-        window.addEventListener("resize", handleResize);
-
-        handleResize();
         return () => {
             window.removeEventListener("resize", handleResize);
         };
-    }, [gridRef, toggleChat, peers.length]);
+    }, [gridRef, toggleChat, peers]);
 
+    // Sets Video Dimensions when Grid Dimensions changes 
     useEffect(() => {
         let max = 0;
         let i = 0;

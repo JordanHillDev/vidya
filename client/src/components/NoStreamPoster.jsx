@@ -9,6 +9,7 @@ export const NoStreamPoster = ({videoDimensions}) => {
             bottom: '0',
             height: videoDimensions.height,
             width: videoDimensions.width,
+            // outline: '2px solid white'
         }}>
             <svg
                 xmlns="http://www.w3.org/2000/svg"

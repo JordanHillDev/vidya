@@ -18,6 +18,7 @@ const Video = ({ stream, videoDimensions, userName, sharingVideo, isMe }) => {
             className="grid"
             style={{
                 position: "relative",
+                // outline: '2px solid white'
             }}
         >
             <video
@@ -41,7 +42,7 @@ const Video = ({ stream, videoDimensions, userName, sharingVideo, isMe }) => {
                     </div>
                 )}
                 {isMe && (
-                    <NameInput  style={{width: "200px"}}/>
+                    <NameInput  style={{width: "200px", zIndex: '10'}}/>
                 )}
             </div>
         </div>
