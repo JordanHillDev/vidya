@@ -1,5 +1,4 @@
-import { useContext, useEffect, useRef } from "react";
-import { RoomContext } from "../context/RoomContext";
+import { useEffect, useRef } from "react";
 // Components
 import NameInput from "./NameInput";
 import { NoStreamPoster } from "./NoStreamPoster";

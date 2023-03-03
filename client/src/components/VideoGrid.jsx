@@ -1,9 +1,11 @@
 import { useRef, useContext, useEffect } from "react";
+// Context
 import { RoomContext } from "../context/RoomContext";
 import { UserContext } from "../context/UserContext";
+// Hooks
 import useGridResize from "../hooks/useGridResize";
+// Components
 import Video from "./Video";
-import NameInput from "./NameInput";
 
 const VideoGrid = ({ toggleChat }) => {
     const { stream, peers, screenSharingId } = useContext(RoomContext);
@@ -18,7 +20,7 @@ const VideoGrid = ({ toggleChat }) => {
 
     useEffect(() => {
         setVideoDimensions("");
-    }, []);
+    }, [setVideoDimensions]);
 
     return (
         <div
@@ -26,6 +28,7 @@ const VideoGrid = ({ toggleChat }) => {
             className="col-start-1 col-end-2 min-h-full flex flex-wrap justify-center content-start bg-stone-800"
         >
             <Video
+                key={'me'}
                 stream={stream}
                 videoDimensions={videoDimensions}
                 sharingVideo={sharingVideo}
