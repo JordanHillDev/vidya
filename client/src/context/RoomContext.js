@@ -101,13 +101,16 @@ export const RoomProvider = ({ children }) => {
         setMe(peer);
 
         try {
+            console.log('I am trying to get that stream')
             navigator.mediaDevices
                 .getUserMedia({ video: true, audio: true })
                 .then((stream) => {
                     setSharingVideo(!!stream.getVideoTracks().length);
                     setStream(stream);
                 });
+                console.log('I didnt errored')
         } catch (error) {
+            console.log('I errored')
             console.error(error);
         }
 

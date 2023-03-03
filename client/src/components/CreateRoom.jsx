@@ -7,9 +7,13 @@ const CreateRoom = () => {
         ws.emit("create-room");
     };
 
+    const handleKeyDown = (e) => {
+        if(e.key === "Enter") createRoom()
+    }
+
     return (
         <div className="flex flex-col mt-8">
-            <NameInput />
+            <NameInput handleKeyDown={handleKeyDown}/>
             <Button onClick={createRoom}>Create A Room</Button>
         </div>
     );

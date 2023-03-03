@@ -20,8 +20,9 @@ const Room = () => {
     const { toggleChat, chat } = useContext(ChatContext);
 
     useEffect(() => {
-        if (stream)
+        if (stream) {
             ws.emit("join-room", { roomId: id, peerId: userId, userName });
+        }
     }, [stream]);
 
     useEffect(() => {
