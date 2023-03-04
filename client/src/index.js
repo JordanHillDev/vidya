@@ -10,6 +10,7 @@ import Home from "./pages/Home";
 import Room from "./pages/Room";
 // Styles
 import "./index.css";
+import 'react-tooltip/dist/react-tooltip.css'
 
 ReactDOM.render(
     <BrowserRouter>

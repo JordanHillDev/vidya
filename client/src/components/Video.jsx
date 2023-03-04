@@ -31,6 +31,7 @@ const Video = ({ stream, videoDimensions, userName, sharingVideo, isMe }) => {
                     objectFit: "cover",
                     gridColumn: "1 / 2",
                     gridRow: "1 / 2",
+                    transition: 'height 1s, width 1s'
                 }}
             />
             {!sharingVideo && <NoStreamPoster videoDimensions={videoDimensions} />}

@@ -1,6 +1,9 @@
 import { useState, useMemo } from "react";
+import { Tooltip } from 'react-tooltip';
 import { CopyToClipboard } from "react-copy-to-clipboard";
+// Styles
 import classNames from "classnames";
+// Icons
 import { clipboardIcon, checkedClipboardIcon } from "../assets/icons";
 
 const CopyRoomId = () => {
@@ -33,8 +36,9 @@ const CopyRoomId = () => {
             <button className={classNames("flex w-[120px] justify-center p-2 rounded", {
                 "bg-emerald-600": isCopied,
                 "bg-purple-600": !isCopied
-            })}>
+            })} id='copyLinkTip'>
                 {isCopied ? checkedClipboard : clipboard}
+                <Tooltip anchorSelect="#copyLinkTip" content={'Copy Room Link'} style={{color: 'black', backgroundColor: 'white'}}/>
             </button>
         </CopyToClipboard>
     );
