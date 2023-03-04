@@ -1,6 +1,6 @@
 import { Tooltip } from 'react-tooltip';
 // Icons
-import { toggleChatIcon } from "../assets/icons";
+import { toggleChatIcon } from "../../assets/icons";
 
 const unreadDot = (
     <div

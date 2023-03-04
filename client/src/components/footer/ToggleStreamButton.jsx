@@ -1,9 +1,9 @@
 import { useContext } from "react";
-import { Tooltip } from 'react-tooltip';
+import { Tooltip } from "react-tooltip";
 // Context
-import { RoomContext } from "../context/RoomContext";
+import { RoomContext } from "../../context/RoomContext";
 // Icons
-import { sharingVideoIcon, notSharingVideoIcon } from "../assets/icons";
+import { sharingVideoIcon, notSharingVideoIcon } from "../../assets/icons";
 
 export const ToggleStreamButton = ({ toggleStream }) => {
     const { sharingVideo } = useContext(RoomContext);
@@ -15,7 +15,11 @@ export const ToggleStreamButton = ({ toggleStream }) => {
             id="toggleStreamTip"
         >
             {sharingVideo ? sharingVideoIcon : notSharingVideoIcon}
-            <Tooltip anchorSelect="#toggleStreamTip" content={sharingVideo ? 'Stop Sharing Video' : 'Share Video'} style={{color: 'black', backgroundColor: 'white'}}/>
+            <Tooltip
+                anchorSelect="#toggleStreamTip"
+                content={sharingVideo ? "Stop Sharing Video" : "Share Video"}
+                style={{ color: "black", backgroundColor: "white" }}
+            />
         </button>
     );
 };

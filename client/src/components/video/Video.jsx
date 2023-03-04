@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 // Components
-import NameInput from "./NameInput";
+import NameInput from "../common/NameInput";
 import { NoStreamPoster } from "./NoStreamPoster";
 
 const Video = ({ stream, videoDimensions, userName, sharingVideo, isMe }) => {

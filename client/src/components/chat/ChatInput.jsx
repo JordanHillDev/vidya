@@ -6,7 +6,7 @@ import { UserContext } from "../../context/UserContext";
 // Icons
 import { sendMessageIcon } from "../../assets/icons";
 // Components
-import { Button } from "../../common/Button";
+import { Button } from "../common/Button";
 
 
 const ChatInput = () => {

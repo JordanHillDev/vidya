@@ -4,7 +4,7 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 // Styles
 import classNames from "classnames";
 // Icons
-import { clipboardIcon, checkedClipboardIcon } from "../assets/icons";
+import { clipboardIcon, checkedClipboardIcon } from "../../assets/icons";
 
 const CopyRoomId = () => {
     const url = useMemo(() => window.location.href, []);

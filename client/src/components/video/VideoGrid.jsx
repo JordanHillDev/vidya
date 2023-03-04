@@ -1,9 +1,9 @@
 import { useRef, useContext, useEffect } from "react";
 // Context
-import { RoomContext } from "../context/RoomContext";
-import { UserContext } from "../context/UserContext";
+import { RoomContext } from "../../context/RoomContext";
+import { UserContext } from "../../context/UserContext";
 // Hooks
-import useGridResize from "../hooks/useGridResize";
+import useGridResize from "../../hooks/useGridResize";
 // Components
 import Video from "./Video";
 

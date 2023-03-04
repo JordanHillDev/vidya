@@ -1,5 +1,5 @@
-import { Button } from "../common/Button";
-import NameInput from "./NameInput";
+import { Button } from "./common/Button";
+import NameInput from "./common/NameInput";
 import { ws } from "../ws";
 
 const CreateRoom = () => {

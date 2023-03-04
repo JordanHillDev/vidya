@@ -5,9 +5,9 @@ import { RoomContext } from "../context/RoomContext";
 import { UserContext } from "../context/UserContext";
 import { ChatContext } from "../context/ChatContext";
 // Components
-import Header from "../components/Header";
-import VideoGrid from "../components/VideoGrid";
-import Footer from "../components/Footer";
+import Header from "../components/header/Header";
+import VideoGrid from "../components/video/VideoGrid";
+import Footer from "../components/footer/Footer";
 import Chat from "../components/chat/Chat";
 // ws
 import { ws } from "../ws";
