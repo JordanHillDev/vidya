@@ -29,10 +29,13 @@ export const RoomProvider = ({ children }) => {
     const [me, setMe] = useState();
     const [stream, setStream] = useState();
     const [screenStream, setScreenStream] = useState();
-    const [screenSharingId, setScreenSharingId] = useState("");
     const [roomId, setRoomId] = useState();
 
     const [peers, dispatch] = useReducer(peersReducer, {});
+
+    useEffect(() => {
+        dispatch(addPeerStreamAction(userId, stream));
+    }, [stream]);
 
     const enterRoom = ({ roomId }) => {
         navigate(`/room/${roomId}`);
@@ -48,7 +51,6 @@ export const RoomProvider = ({ children }) => {
 
     const switchStream = (stream) => {
         setStream(stream);
-        setScreenSharingId(me?.id || "");
         Object.values(me?.connections).forEach((connection) => {
             const videoTrack = stream
                 ?.getTracks()
@@ -62,16 +64,10 @@ export const RoomProvider = ({ children }) => {
     };
 
     const shareScreen = () => {
-        if (screenSharingId) {
-            navigator.mediaDevices
-                .getUserMedia({ video: true, audio: true })
-                .then(switchStream);
-        } else {
-            navigator.mediaDevices.getDisplayMedia().then((stream) => {
-                switchStream(stream);
-                setScreenStream(stream);
-            });
-        }
+        navigator.mediaDevices.getDisplayMedia().then((stream) => {
+            switchStream(stream);
+            setScreenStream(stream);
+        });
     };
 
     const nameChangedHandler = ({ peerId, userName }) => {
@@ -100,25 +96,24 @@ export const RoomProvider = ({ children }) => {
         const peer = new Peer(userId);
         setMe(peer);
 
-        try {
-            console.log('I am trying to get that stream')
-            navigator.mediaDevices
-                .getUserMedia({ video: true, audio: true })
-                .then((stream) => {
-                    setSharingVideo(!!stream.getVideoTracks().length);
-                    setStream(stream);
+        const getStream = async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    audio: true,
                 });
-                console.log('I didnt errored')
-        } catch (error) {
-            console.log('I errored')
-            console.error(error);
-        }
+                setSharingVideo(!!stream.getVideoTracks().length);
+                setStream(stream)
+            } catch (error) {
+                console.error(error)
+            }
+        };
+
+        getStream()
 
         ws.on("room-created", enterRoom);
         ws.on("get-users", getUsers);
         ws.on("user-disconnected", removePeer);
-        ws.on("user-started-sharing", (peerId) => setScreenSharingId(peerId));
-        ws.on("user-stopped-sharing", () => setScreenSharingId(""));
         ws.on("name-changed", nameChangedHandler);
         ws.on("toggled-showing-video", showingVideoHandler);
 
@@ -135,14 +130,6 @@ export const RoomProvider = ({ children }) => {
     }, []);
 
     useEffect(() => {
-        if (screenSharingId) {
-            ws.emit("start-sharing", { peerId: screenSharingId, roomId });
-        } else {
-            ws.emit("stop-sharing");
-        }
-    }, [screenSharingId, roomId]);
-
-    useEffect(() => {
         if (!me) return;
         if (!stream) return;
 
@@ -153,6 +140,7 @@ export const RoomProvider = ({ children }) => {
                 },
             });
             call.on("stream", (peerStream) => {
+                console.log('call.on("stream")')
                 dispatch(addPeerStreamAction(peerId, peerStream));
             });
             dispatch(addPeerNameAction(peerId, name));
@@ -181,7 +169,6 @@ export const RoomProvider = ({ children }) => {
                 shareScreen,
                 roomId,
                 setRoomId,
-                screenSharingId,
                 sharingVideo,
             }}
         >

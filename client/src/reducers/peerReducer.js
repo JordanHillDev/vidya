@@ -9,6 +9,7 @@ import {
 export const peersReducer = (state, action) => {
     switch (action.type) {
         case ADD_PEER_STREAM:
+            console.log('ADD_PEER_STREAM reducer')
             return {
                 ...state,
                 [action.payload.peerId]: {

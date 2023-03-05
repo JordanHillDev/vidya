@@ -1,4 +1,4 @@
-import { useEffect, useContext, useRef } from "react";
+import { useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 // Context
 import { RoomContext } from "../context/RoomContext";
@@ -13,7 +13,6 @@ import Chat from "../components/chat/Chat";
 import { ws } from "../ws";
 
 const Room = () => {
-    // const ref = useRef();
     const { id } = useParams();
     const { stream, setRoomId } = useContext(RoomContext);
     const { userName, userId } = useContext(UserContext);
@@ -31,7 +30,6 @@ const Room = () => {
 
     return (
         <div
-            // ref={ref}
             className="max-h-screen grid grid-rows-grail grid-cols-grail bg-stone-800"
             style={{ maxHeight: "100vh", height: "100vh" }}
         >
