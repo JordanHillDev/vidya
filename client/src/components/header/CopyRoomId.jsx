@@ -33,7 +33,7 @@ const CopyRoomId = () => {
 
     return (
         <CopyToClipboard text={url} onCopy={onCopyText}>
-            <button className={classNames("flex w-[120px] justify-center p-2 rounded", {
+            <button className={classNames("flex w-[120px] justify-center p-2 rounded z-10", {
                 "bg-emerald-600": isCopied,
                 "bg-purple-600": !isCopied
             })} id='copyLinkTip'>
