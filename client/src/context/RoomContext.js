@@ -8,6 +8,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import Peer from "peerjs";
 import { ws } from "../ws";
+// Reducers / Actions
 import { peersReducer } from "../reducers/peerReducer";
 import {
     addPeerStreamAction,
@@ -16,30 +17,28 @@ import {
     addAllPeersAction,
     toggleSharingVideoAction,
 } from "../reducers/peerActions";
+// Context
 import { UserContext } from "./UserContext";
 
 export const RoomContext = createContext();
 
 export const RoomProvider = ({ children }) => {
     const navigate = useNavigate();
-
-    const { userName, userId, sharingVideo, setSharingVideo } =
-        useContext(UserContext);
-
-    const [me, setMe] = useState();
-    const [stream, setStream] = useState();
-    const [screenStream, setScreenStream] = useState();
-    const [roomId, setRoomId] = useState();
-
-    const [peers, dispatch] = useReducer(peersReducer, {});
-
-    useEffect(() => {
-        dispatch(addPeerStreamAction(userId, stream));
-    }, [stream]);
-
     const enterRoom = ({ roomId }) => {
         navigate(`/room/${roomId}`);
     };
+    
+    // Context
+    const { userName, userId, sharingVideo, setSharingVideo } =
+        useContext(UserContext);
+    
+    // State
+    const [me, setMe] = useState();
+    const [stream, setStream] = useState();
+    const [roomId, setRoomId] = useState();
+
+    // Dispatch / Actions
+    const [peers, dispatch] = useReducer(peersReducer, {});
 
     const getUsers = ({ participants }) => {
         dispatch(addAllPeersAction(participants));
@@ -47,27 +46,6 @@ export const RoomProvider = ({ children }) => {
 
     const removePeer = (peerId) => {
         dispatch(removePeerStreamAction(peerId));
-    };
-
-    const switchStream = (stream) => {
-        setStream(stream);
-        Object.values(me?.connections).forEach((connection) => {
-            const videoTrack = stream
-                ?.getTracks()
-                .find((track) => track.kind === "video");
-            connection[0].peerConnection
-                .getSenders()
-                .find((sender) => sender.track.kind === "video")
-                .replaceTrack(videoTrack)
-                .catch((err) => console.error(err));
-        });
-    };
-
-    const shareScreen = () => {
-        navigator.mediaDevices.getDisplayMedia().then((stream) => {
-            switchStream(stream);
-            setScreenStream(stream);
-        });
     };
 
     const nameChangedHandler = ({ peerId, userName }) => {
@@ -78,6 +56,7 @@ export const RoomProvider = ({ children }) => {
         dispatch(toggleSharingVideoAction(peerId, sharingVideo));
     };
 
+    // Effects
     useEffect(() => {
         const tracks = stream?.getVideoTracks();
         if (tracks) tracks.forEach((track) => (track.enabled = sharingVideo));
@@ -103,13 +82,13 @@ export const RoomProvider = ({ children }) => {
                     audio: true,
                 });
                 setSharingVideo(!!stream.getVideoTracks().length);
-                setStream(stream)
+                setStream(stream);
             } catch (error) {
-                console.error(error)
+                console.error(error);
             }
         };
 
-        getStream()
+        getStream();
 
         ws.on("room-created", enterRoom);
         ws.on("get-users", getUsers);
@@ -121,8 +100,6 @@ export const RoomProvider = ({ children }) => {
             ws.off("room-created");
             ws.off("get-users");
             ws.off("user-disconnected");
-            ws.off("user-started-sharing");
-            ws.off("user-stopped-sharing");
             ws.off("user-joined");
             ws.off("name-changed");
             me?.disconnect();
@@ -140,7 +117,7 @@ export const RoomProvider = ({ children }) => {
                 },
             });
             call.on("stream", (peerStream) => {
-                console.log('call.on("stream")')
+                console.log('call.on("stream")');
                 dispatch(addPeerStreamAction(peerId, peerStream));
             });
             dispatch(addPeerNameAction(peerId, name));
@@ -164,9 +141,7 @@ export const RoomProvider = ({ children }) => {
         <RoomContext.Provider
             value={{
                 stream,
-                screenStream,
                 peers,
-                shareScreen,
                 roomId,
                 setRoomId,
                 sharingVideo,

@@ -18,6 +18,8 @@ const VideoGrid = ({ toggleChat }) => {
         peers
     );
 
+    console.log(peers)
+
     useEffect(() => {
         setVideoDimensions("");
     }, [setVideoDimensions]);
@@ -38,7 +40,7 @@ const VideoGrid = ({ toggleChat }) => {
                 .filter((peer) => !!peer.stream)
                 .map((peer) => (
                     <Video
-                        key={peer.peerId}
+                        key={peer.stream.id}
                         stream={peer.stream}
                         videoDimensions={videoDimensions}
                         userName={peer.userName || "Anonymous"}
