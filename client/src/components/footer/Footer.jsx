@@ -11,7 +11,11 @@ import { ToggleShareScreenButton } from "./ToggleShareScreenButton";
 const Footer = () => {
     const { toggleChat, unread } = useContext(ChatContext);
     const { toggleSharingVideo } = useContext(UserContext);
-    const { shareScreen } = useContext(RoomContext)
+    const { sharingScreen, setSharingScreen, shareScreen } = useContext(RoomContext)
+
+    function toggleSharingScreen() {
+        setSharingScreen((curr) => !curr)
+    }
 
     return (
         <div className="col-start-1 col-end-3 bg-stone-800 h-[100px] flex justify-center z-10">

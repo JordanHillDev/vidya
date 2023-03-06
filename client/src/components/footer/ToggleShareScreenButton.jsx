@@ -1,12 +1,12 @@
 import { useContext } from "react";
-import { Tooltip } from 'react-tooltip';
+import { Tooltip } from "react-tooltip";
 // Context
 import { RoomContext } from "../../context/RoomContext";
 // Icons
 import { shareScreenIcon } from "../../assets/icons";
 
-
-export const ToggleShareScreenButton = ({toggleShareScreen}) => {
+export const ToggleShareScreenButton = ({ toggleShareScreen }) => {
+    const { sharingScreen } = useContext(RoomContext);
 
     return (
         <button
@@ -15,8 +15,11 @@ export const ToggleShareScreenButton = ({toggleShareScreen}) => {
             id="toggleShareScreenTip"
         >
             {shareScreenIcon}
-            <Tooltip anchorSelect="#toggleShareScreenTip" content='Share Screen' style={{color: 'black', backgroundColor: 'white'}}/>
+            <Tooltip
+                anchorSelect="#toggleShareScreenTip"
+                content={sharingScreen ? "Stop Sharing Screen" : "Share Screen"}
+                style={{ color: "black", backgroundColor: "white" }}
+            />
         </button>
     );
-    
-}
+};

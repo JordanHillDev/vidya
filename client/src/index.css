@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* body {
+/* keeps whiteness from showing when resizing window */
+body {
     background-color: #292524;
-} */
+}

@@ -8,10 +8,9 @@ import useGridResize from "../../hooks/useGridResize";
 import Video from "./Video";
 
 const VideoGrid = ({ toggleChat }) => {
-    const { stream, peers, screenSharingId } = useContext(RoomContext);
+    const { stream, peers } = useContext(RoomContext);
     const { sharingVideo } = useContext(UserContext);
     const gridRef = useRef(null);
-    const { [screenSharingId]: sharing, ...peersToShow } = peers;
     const [videoDimensions, setVideoDimensions] = useGridResize(
         gridRef,
         toggleChat,

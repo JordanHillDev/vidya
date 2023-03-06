@@ -13,25 +13,27 @@ export const roomHandler = (socket) => {
     const joinRoom = ({ roomId, peerId, userName, sharingVideo }) => {
         if (!rooms[roomId]) rooms[roomId] = {};
         if (!chats[roomId]) chats[roomId] = [];
-        socket.emit("get-messages", chats[roomId]);
-        console.log("user joined the room", roomId, peerId, userName);
-        rooms[roomId][peerId] = { peerId, userName, sharingVideo };
-        socket.join(roomId);
-        socket
-            .to(roomId)
-            .emit("user-joined", { peerId, userName, sharingVideo });
-        socket.emit("get-users", {
-            roomId,
-            participants: rooms[roomId],
-        });
-        socket.on("disconnect", () => {
-            console.log("user left the room", peerId);
-            leaveRoom({ roomId, peerId });
-        });
+
+        if (!rooms[roomId][peerId]) {
+            socket.emit("get-messages", chats[roomId]);
+            console.log("user joined the room", roomId, peerId, userName);
+            rooms[roomId][peerId] = { peerId, userName, sharingVideo };
+            socket.join(roomId);
+            socket
+                .to(roomId)
+                .emit("user-joined", { peerId, userName, sharingVideo });
+            socket.emit("get-users", {
+                roomId,
+                participants: rooms[roomId],
+            });
+            socket.on("disconnect", () => {
+                console.log("user left the room", peerId);
+                leaveRoom({ roomId, peerId });
+            });
+        }
     };
 
     const leaveRoom = ({ peerId, roomId }) => {
-        // rooms[roomId] = rooms[roomId].filter((id) => id !== peerId);
         socket.to(roomId).emit("user-disconnected", peerId);
     };
 
