@@ -16,7 +16,6 @@ export const UserProvider = ({ children }) => {
 
     useEffect(() => {
         localStorage.setItem("userName", userName);
-        console.log(userName)
     }, [userName]);
 
     useEffect(() => {

@@ -17,8 +17,6 @@ const VideoGrid = ({ toggleChat }) => {
         peers
     );
 
-    console.log(peers)
-
     useEffect(() => {
         setVideoDimensions("");
     }, [setVideoDimensions]);

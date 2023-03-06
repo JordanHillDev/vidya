@@ -28,6 +28,13 @@ const Room = () => {
         setRoomId(id || "");
     }, [id, setRoomId]);
 
+    // Closes socket connection when leaving the site
+    useEffect(() => {
+        window.onpopstate = e => {
+            ws.close()
+        }
+    }, [])
+
     return (
         <div
             className="max-h-screen grid grid-rows-grail grid-cols-grail bg-stone-800"

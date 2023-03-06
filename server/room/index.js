@@ -14,14 +14,13 @@ export const roomHandler = (socket) => {
         if (!rooms[roomId]) rooms[roomId] = {};
         if (!chats[roomId]) chats[roomId] = [];
 
-        if (!rooms[roomId][peerId]) {
+        // Keeps user-joined from refiring when screen-sharing and allows user to rejoin if disconnected
+        if (!rooms[roomId][peerId] || !rooms[roomId][peerId].isPresent) { 
             socket.emit("get-messages", chats[roomId]);
             console.log("user joined the room", roomId, peerId, userName);
-            rooms[roomId][peerId] = { peerId, userName, sharingVideo };
+            rooms[roomId][peerId] = { peerId, userName, sharingVideo, isPresent: true };
             socket.join(roomId);
-            socket
-                .to(roomId)
-                .emit("user-joined", { peerId, userName, sharingVideo });
+            socket.to(roomId).emit("user-joined", { peerId, userName, sharingVideo });
             socket.emit("get-users", {
                 roomId,
                 participants: rooms[roomId],
@@ -34,15 +33,8 @@ export const roomHandler = (socket) => {
     };
 
     const leaveRoom = ({ peerId, roomId }) => {
+        rooms[roomId][peerId].isPresent = false
         socket.to(roomId).emit("user-disconnected", peerId);
-    };
-
-    const startSharing = ({ peerId, roomId }) => {
-        socket.to(roomId).emit("user-started-sharing", peerId);
-    };
-
-    const stopSharing = (roomId) => {
-        socket.to(roomId).emit("user-stopped-sharing");
     };
 
     const addMessage = (roomId, message) => {
@@ -73,8 +65,7 @@ export const roomHandler = (socket) => {
 
     socket.on("create-room", createRoom);
     socket.on("join-room", joinRoom);
-    socket.on("start-sharing", startSharing);
-    socket.on("stop-sharing", stopSharing);
+    // socket.on("leave-room", leaveRoom);
     socket.on("send-message", addMessage);
     socket.on("change-name", changeName);
     socket.on("toggle-showing-video", toggleShowingVideo);
