@@ -16,6 +16,7 @@ import {
     removePeerStreamAction,
     addAllPeersAction,
     toggleSharingVideoAction,
+    toggleSharingMicAction
 } from "../reducers/peerActions";
 // Context
 import { UserContext } from "./UserContext";
@@ -29,7 +30,7 @@ export const RoomProvider = ({ children }) => {
     };
 
     // Context
-    const { userName, userId, sharingVideo, setSharingVideo } =
+    const { userName, userId, sharingVideo, setSharingVideo, sharingMic, setSharingMic } =
         useContext(UserContext);
 
     // State
@@ -57,6 +58,10 @@ export const RoomProvider = ({ children }) => {
         dispatch(toggleSharingVideoAction(peerId, sharingVideo));
     };
 
+    const sharingMicHandler = ({ peerId, sharingMic }) => {
+        dispatch(toggleSharingMicAction(peerId, sharingMic))
+    }
+
     // Effects
     useEffect(() => {
         const tracks = stream?.getVideoTracks();
@@ -69,6 +74,16 @@ export const RoomProvider = ({ children }) => {
     }, [sharingVideo, userId, roomId, stream]);
 
     useEffect(() => {
+        const tracks = stream?.getAudioTracks()
+        if(tracks) tracks.forEach((track) => (track.enabled = sharingMic));
+        ws.emit("toggle-sharing-mic", {
+            peerId: userId,
+            roomId,
+            sharingMic
+        })
+    }, [sharingMic, userId, roomId, stream])
+
+    useEffect(() => {
         ws.emit("change-name", { peerId: userId, userName, roomId });
     }, [userName]);
 
@@ -79,6 +94,7 @@ export const RoomProvider = ({ children }) => {
                 audio: true,
             });
             setSharingVideo(!!stream.getVideoTracks().length);
+            setSharingMic(!!stream.getAudioTracks().length);
             setStream(stream);
         } catch (error) {
             console.error(error);
@@ -123,6 +139,7 @@ export const RoomProvider = ({ children }) => {
         ws.on("user-disconnected", removePeer);
         ws.on("name-changed", nameChangedHandler);
         ws.on("toggled-showing-video", showingVideoHandler);
+        ws.on("toggled-sharing-mic", sharingMicHandler);
 
         return () => {
             ws.off("room-created");
@@ -130,6 +147,8 @@ export const RoomProvider = ({ children }) => {
             ws.off("user-disconnected");
             ws.off("user-joined");
             ws.off("name-changed");
+            ws.off("toggle-showing-video")
+            ws.off("toggle-sharing-mic")
             me?.disconnect();
         };
     }, []);
@@ -173,6 +192,7 @@ export const RoomProvider = ({ children }) => {
                 setRoomId,
                 sharingVideo,
                 sharingScreen,
+                sharingMic,
                 setSharingScreen,
                 shareScreen
             }}

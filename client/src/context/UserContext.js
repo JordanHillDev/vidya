@@ -9,10 +9,15 @@ export const UserProvider = ({ children }) => {
         localStorage.getItem("userName") || ""
     );
     const [sharingVideo, setSharingVideo] = useState(false);
+    const [sharingMic, setSharingMic] = useState(false);
 
     const toggleSharingVideo = () => {
         setSharingVideo((curr) => !curr)
     };
+
+    const toggleSharingMic = () => {
+        setSharingMic((curr) => !curr)
+    }
 
     useEffect(() => {
         localStorage.setItem("userName", userName);
@@ -31,6 +36,9 @@ export const UserProvider = ({ children }) => {
                 sharingVideo,
                 setSharingVideo,
                 toggleSharingVideo,
+                sharingMic,
+                setSharingMic,
+                toggleSharingMic
             }}
         >
             {children}

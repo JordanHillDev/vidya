@@ -32,6 +32,7 @@ const VideoGrid = ({ toggleChat }) => {
                 videoDimensions={videoDimensions}
                 sharingVideo={sharingVideo}
                 isMe={true}
+                muted={true}
             />
             {Object.values(peers)
                 .filter((peer) => !!peer.stream)
@@ -42,6 +43,8 @@ const VideoGrid = ({ toggleChat }) => {
                         videoDimensions={videoDimensions}
                         userName={peer.userName || "Anonymous"}
                         sharingVideo={peer.sharingVideo}
+                        sharingMic={peer.sharingMic}
+                        muted={false}
                     />
                 ))}
         </div>

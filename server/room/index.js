@@ -63,10 +63,19 @@ export const roomHandler = (socket) => {
         }
     };
 
+    const toggleSharingMic = ({ peerId, roomId, sharingMic }) => {
+        if (rooms[roomId] && rooms[roomId][peerId]) {
+            rooms[roomId][peerId].sharingMic = sharingMic;
+            socket
+                .to(roomId)
+                .emit("toggled-sharing-mic", { peerId, sharingMic });
+        }
+    }
+
     socket.on("create-room", createRoom);
     socket.on("join-room", joinRoom);
-    // socket.on("leave-room", leaveRoom);
     socket.on("send-message", addMessage);
     socket.on("change-name", changeName);
     socket.on("toggle-showing-video", toggleShowingVideo);
+    socket.on("toggle-sharing-mic", toggleSharingMic);
 };

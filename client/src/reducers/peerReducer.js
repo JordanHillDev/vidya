@@ -4,6 +4,7 @@ import {
     REMOVE_PEER_STREAM,
     ADD_ALL_PEERS,
     TOGGLE_SHARING_VIDEO,
+    TOGGLE_SHARING_MIC,
 } from "./peerActions";
 
 export const peersReducer = (state, action) => {
@@ -30,6 +31,14 @@ export const peersReducer = (state, action) => {
                 [action.payload.peerId]: {
                     ...state[action.payload.peerId],
                     sharingVideo: action.payload.sharingVideo,
+                },
+            };
+        case TOGGLE_SHARING_MIC:
+            return {
+                ...state,
+                [action.payload.peerId]: {
+                    ...state[action.payload.peerId],
+                    sharingMic: action.payload.sharingMic,
                 },
             };
         case REMOVE_PEER_STREAM:
