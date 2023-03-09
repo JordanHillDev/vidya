@@ -16,7 +16,7 @@ import {
     removePeerStreamAction,
     addAllPeersAction,
     toggleSharingVideoAction,
-    toggleSharingMicAction
+    toggleSharingMicAction,
 } from "../reducers/peerActions";
 // Context
 import { UserContext } from "./UserContext";
@@ -30,10 +30,17 @@ export const RoomProvider = ({ children }) => {
     };
 
     // Context
-    const { userName, userId, sharingVideo, setSharingVideo, sharingMic, setSharingMic } =
-        useContext(UserContext);
+    const {
+        userName,
+        userId,
+        sharingVideo,
+        setSharingVideo,
+        sharingMic,
+        setSharingMic,
+    } = useContext(UserContext);
 
     // State
+    const [connectedToSocket, setConnectedToSocket] = useState(false)
     const [me, setMe] = useState();
     const [stream, setStream] = useState();
     const [roomId, setRoomId] = useState();
@@ -50,6 +57,7 @@ export const RoomProvider = ({ children }) => {
         dispatch(removePeerStreamAction(peerId));
     };
 
+    
     const nameChangedHandler = ({ peerId, userName }) => {
         dispatch(addPeerNameAction(peerId, userName));
     };
@@ -59,8 +67,8 @@ export const RoomProvider = ({ children }) => {
     };
 
     const sharingMicHandler = ({ peerId, sharingMic }) => {
-        dispatch(toggleSharingMicAction(peerId, sharingMic))
-    }
+        dispatch(toggleSharingMicAction(peerId, sharingMic));
+    };
 
     // Effects
     useEffect(() => {
@@ -74,18 +82,22 @@ export const RoomProvider = ({ children }) => {
     }, [sharingVideo, userId, roomId, stream]);
 
     useEffect(() => {
-        const tracks = stream?.getAudioTracks()
-        if(tracks) tracks.forEach((track) => (track.enabled = sharingMic));
+        const tracks = stream?.getAudioTracks();
+        if (tracks) tracks.forEach((track) => (track.enabled = sharingMic));
         ws.emit("toggle-sharing-mic", {
             peerId: userId,
             roomId,
-            sharingMic
-        })
-    }, [sharingMic, userId, roomId, stream])
+            sharingMic,
+        });
+    }, [sharingMic, userId, roomId, stream]);
 
     useEffect(() => {
         ws.emit("change-name", { peerId: userId, userName, roomId });
     }, [userName]);
+
+    const setConnected = () => {
+        setConnectedToSocket(true)
+    }
 
     const getStream = async () => {
         try {
@@ -120,11 +132,11 @@ export const RoomProvider = ({ children }) => {
             navigator.mediaDevices
                 .getUserMedia({ video: true, audio: true })
                 .then((stream) => switchStream(stream));
-                setSharingScreen(false)
+            setSharingScreen(false);
         } else {
             navigator.mediaDevices.getDisplayMedia().then((stream) => {
                 switchStream(stream);
-                setSharingScreen(true)
+                setSharingScreen(true);
             });
         }
     };
@@ -132,8 +144,9 @@ export const RoomProvider = ({ children }) => {
     useEffect(() => {
         const peer = new Peer(userId);
         setMe(peer);
-        if(!stream) getStream();
+        if (!stream) getStream();
 
+        ws.on('connected', setConnected)
         ws.on("room-created", enterRoom);
         ws.on("get-users", getUsers);
         ws.on("user-disconnected", removePeer);
@@ -147,8 +160,8 @@ export const RoomProvider = ({ children }) => {
             ws.off("user-disconnected");
             ws.off("user-joined");
             ws.off("name-changed");
-            ws.off("toggle-showing-video")
-            ws.off("toggle-sharing-mic")
+            ws.off("toggle-showing-video");
+            ws.off("toggle-sharing-mic");
             me?.disconnect();
         };
     }, []);
@@ -186,6 +199,7 @@ export const RoomProvider = ({ children }) => {
     return (
         <RoomContext.Provider
             value={{
+                connectedToSocket,
                 stream,
                 peers,
                 roomId,
@@ -194,7 +208,7 @@ export const RoomProvider = ({ children }) => {
                 sharingScreen,
                 sharingMic,
                 setSharingScreen,
-                shareScreen
+                shareScreen,
             }}
         >
             {children}

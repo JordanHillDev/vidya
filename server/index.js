@@ -11,13 +11,14 @@ const server = http.createServer(app)
 
 const io = new Server(server, {
     cors: {
-        origin: "*",
+        origin: "https://640a4f096c228c1683eafc18--papaya-peony-7258fd.netlify.app/",
         methods: ["GET", "POST"]
     }
 })
 
 io.on("connection", (socket) => {
     console.log('user is connected')
+    socket.emit('connected')
     roomHandler(socket)
     socket.on("disconnect", () => {
         console.log("user is disconnected")
