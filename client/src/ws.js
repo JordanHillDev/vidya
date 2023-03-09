@@ -1,4 +1,4 @@
 import socketIOClient from "socket.io-client"
 
-const WS = "http://localhost:8080"
+const WS = "https://vidya.onrender.com"
 export const ws = socketIOClient(WS)
