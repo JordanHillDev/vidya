@@ -25,10 +25,6 @@ io.on("connection", (socket) => {
     })
 })
 
-app.get('/', (req, res) => {
-    res.send('Vidya Socket Server')
-})
-
 server.listen(PORT, () => {
     console.log(`Listening to the server on ${PORT}`);
 });
