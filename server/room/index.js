@@ -1,30 +1,62 @@
 import { v4 as uuidV4 } from "uuid";
-import supabase from "../config/supabaseClient.js";
+import supabase, { insertRoom, insertUser, insertParticipant, getMessages, getParticipants } from "../config/supabaseClient.js";
 
 const rooms = {};
 const chats = {};
 
 export const roomHandler = (socket) => {
-    const createRoom = () => {
+    const createRoom = async () => {
         const roomId = uuidV4();
-        rooms[roomId] = {};
+        // rooms[roomId] = {};
+
+        insertRoom(roomId)
+
         socket.emit("room-created", { roomId });
         console.log("user created the room");
     };
-    const joinRoom = ({ roomId, peerId, userName, sharingVideo }) => {
-        if (!rooms[roomId]) rooms[roomId] = {};
-        if (!chats[roomId]) chats[roomId] = [];
+    const joinRoom = async ({
+        roomId,
+        peerId,
+        userName,
+        sharingVideo,
+        isPresent,
+    }) => {
+        insertUser(peerId)
+        const newParticipant =  await insertParticipant(peerId, roomId)
+        const messages = await getMessages(roomId)
+        const participants = (await getParticipants(roomId)).reduce((acc, curr) => {
+            acc[curr.user_id] = {}
+            return acc
+        }, {})
+
+        // let mapped = participants.reduce((acc, curr) => {
+        //     acc[curr.user_id] = {}
+        //     return acc
+        // }, {})
+
+        
+        
+        // if (!rooms[roomId]) rooms[roomId] = {};
+        // if (!chats[roomId]) chats[roomId] = [];
 
         // Keeps user-joined from refiring when screen-sharing and allows user to rejoin if disconnected
-        if (!rooms[roomId][peerId] || !rooms[roomId][peerId].isPresent) { 
-            socket.emit("get-messages", chats[roomId]);
+        if (newParticipant || !isPresent) {
+            socket.emit("get-messages", messages);
             console.log("user joined the room", roomId, peerId, userName);
-            rooms[roomId][peerId] = { peerId, userName, sharingVideo, isPresent: true };
+            participants[peerId] = {
+                peerId,
+                userName,
+                sharingVideo,
+                isPresent: true,
+            };
+            console.log(participants)
             socket.join(roomId);
-            socket.to(roomId).emit("user-joined", { peerId, userName, sharingVideo });
+            socket
+                .to(roomId)
+                .emit("user-joined", { peerId, userName, sharingVideo });
             socket.emit("get-users", {
                 roomId,
-                participants: rooms[roomId],
+                participants: participants,
             });
             socket.on("disconnect", () => {
                 console.log("user left the room", peerId);
@@ -34,7 +66,7 @@ export const roomHandler = (socket) => {
     };
 
     const leaveRoom = ({ peerId, roomId }) => {
-        rooms[roomId][peerId].isPresent = false
+        // rooms[roomId][peerId].isPresent = false;
         socket.to(roomId).emit("user-disconnected", peerId);
     };
 
@@ -71,7 +103,7 @@ export const roomHandler = (socket) => {
                 .to(roomId)
                 .emit("toggled-sharing-mic", { peerId, sharingMic });
         }
-    }
+    };
 
     socket.on("create-room", createRoom);
     socket.on("join-room", joinRoom);

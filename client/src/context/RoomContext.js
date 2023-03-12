@@ -48,6 +48,7 @@ export const RoomProvider = ({ children }) => {
 
     // Dispatch / Actions
     const [peers, dispatch] = useReducer(peersReducer, {});
+    console.log(peers)
 
     const getUsers = ({ participants }) => {
         dispatch(addAllPeersAction(participants));

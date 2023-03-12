@@ -15,12 +15,12 @@ import { ws } from "../ws";
 const Room = () => {
     const { id } = useParams();
     const { stream, setRoomId } = useContext(RoomContext);
-    const { userName, userId } = useContext(UserContext);
+    const { userName, userId, isPresent, setIsPresent } = useContext(UserContext);
     const { toggleChat, chat } = useContext(ChatContext);
 
     useEffect(() => {
         if (stream) {
-            ws.emit("join-room", { roomId: id, peerId: userId, userName });
+            ws.emit("join-room", { roomId: id, peerId: userId, userName, isPresent });
         }
     }, [stream]);
 
