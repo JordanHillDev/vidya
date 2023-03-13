@@ -14,16 +14,19 @@ import { ws } from "../ws";
 
 const Room = () => {
     const { id } = useParams();
-    console.log(id)
+    console.log(id);
     const { stream, setRoomId } = useContext(RoomContext);
-    const { userName, userId, isPresent, } = useContext(UserContext);
+    const { userName, userId, isPresent } = useContext(UserContext);
     const { toggleChat, chat } = useContext(ChatContext);
 
     useEffect(() => {
-        if (stream) {
-            ws.emit("join-room", { roomId: id, peerId: userId, userName, isPresent });
-        }
-    }, [stream]);
+        ws.emit("join-room", {
+            roomId: id,
+            peerId: userId,
+            userName,
+            isPresent,
+        });
+    }, []);
 
     useEffect(() => {
         setRoomId(id || "");
@@ -31,10 +34,10 @@ const Room = () => {
 
     // Closes socket connection when leaving the site
     useEffect(() => {
-        window.onpopstate = e => {
-            ws.close()
-        }
-    }, [])
+        window.onpopstate = (e) => {
+            ws.close();
+        };
+    }, []);
 
     return (
         <div
