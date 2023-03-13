@@ -7,6 +7,8 @@ const supabaseKey = process.env.ANON_KEY;
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+// CREATE
+
 export const insertRoom = async (roomId) => {
     const { data, error } = await supabase
         .from("rooms")
@@ -25,14 +27,36 @@ export const insertUser = async (peerId) => {
     return data;
 };
 
-export const insertParticipant = async (peerId, roomId) => {
+export const insertParticipant = async (
+    peerId,
+    roomId,
+    userName,
+    sharingVideo
+) => {
     const { data, error } = await supabase
         .from("participants")
-        .insert({ user_id: peerId, room_id: roomId })
+        .insert({
+            user_id: peerId,
+            room_id: roomId,
+            username: userName,
+            sharing_video: sharingVideo,
+        })
         .select();
     if (error) console.log(error);
     return data;
 };
+
+export const insertMessage = async (roomId, peerId, message) => {
+    const { data, error } = await supabase.from("messages").insert({
+        room_id: roomId,
+        user_id: peerId,
+        message: message,
+    });
+    if (error) console.log(error);
+    return data;
+};
+
+// READ
 
 export const getParticipants = async (roomId) => {
     const { data, error } = await supabase
@@ -48,6 +72,26 @@ export const getMessages = async (roomId) => {
         .from("messages")
         .select()
         .eq("room_id", roomId);
+    if (error) console.log(error);
+    return data;
+};
+
+// UPDATE
+
+export const setPresent = async (roomId, peerId) => {
+    const { data, error } = await supabase
+        .from("participants")
+        .update({ is_present: true })
+        .match({ room_id: roomId, user_id: peerId });
+    if (error) console.log(error);
+    return data;
+};
+
+export const setNotPresent = async (roomId, peerId) => {
+    const { data, error } = await supabase
+        .from("participants")
+        .update({ is_present: false })
+        .match({ room_id: roomId, user_id: peerId });
     if (error) console.log(error);
     return data;
 };
