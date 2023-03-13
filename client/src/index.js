@@ -19,8 +19,8 @@ ReactDOM.render(
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route
-                        path="/room/:id"
-                        exact={true}
+                        path="room/:id"
+                        // exact={true}
                         element={
                             <ChatProvider>
                                 <Room />
