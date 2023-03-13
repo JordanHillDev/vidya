@@ -19,7 +19,7 @@ ReactDOM.render(
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route
-                        path="room"
+                        path="/room"
                         element={
                             <ChatProvider>
                                 <Room />
@@ -27,7 +27,7 @@ ReactDOM.render(
                         }
                     />
                     <Route
-                        path="room/:id"
+                        path="/room/:id"
                         element={
                             <ChatProvider>
                                 <Room />
