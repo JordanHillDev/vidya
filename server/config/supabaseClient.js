@@ -95,5 +95,30 @@ export const setNotPresent = async (roomId, peerId) => {
     if (error) console.log(error);
     return data;
 };
+export const setSharingVideo = async (roomId, peerId, sharingVideo) => {
+    const { data, error } = await supabase
+        .from("participants")
+        .update({ sharing_video: sharingVideo })
+        .match({ room_id: roomId, user_id: peerId });
+    if (error) console.log(error);
+    return data;
+};
+export const setSharingMic = async (roomId, peerId, sharingMic) => {
+    const { data, error } = await supabase
+        .from("participants")
+        .update({ sharing_mic: sharingMic })
+        .match({ room_id: roomId, user_id: peerId });
+    if (error) console.log(error);
+    return data;
+};
+
+export const setName = async (roomId, peerId, userName) => {
+    const { data, error } = await supabase
+        .from("participants")
+        .update({ username: userName })
+        .match({ room_id: roomId, user_id: peerId });
+    if (error) console.log(error);
+    return data;
+};
 
 export default supabase;

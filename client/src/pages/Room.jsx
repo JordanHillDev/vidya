@@ -15,7 +15,7 @@ import { ws } from "../ws";
 const Room = () => {
     const { id } = useParams();
     const { stream, setRoomId } = useContext(RoomContext);
-    const { userName, userId, isPresent, setIsPresent } = useContext(UserContext);
+    const { userName, userId, isPresent, } = useContext(UserContext);
     const { toggleChat, chat } = useContext(ChatContext);
 
     useEffect(() => {

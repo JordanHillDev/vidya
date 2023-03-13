@@ -8,10 +8,10 @@ import {
     setPresent,
     setNotPresent,
     insertMessage,
+    setName,
+    setSharingMic,
+    setSharingVideo,
 } from "../config/supabaseClient.js";
-
-const rooms = {};
-const chats = {};
 
 export const roomHandler = (socket) => {
     const createRoom = async () => {
@@ -35,8 +35,14 @@ export const roomHandler = (socket) => {
             sharingVideo,
             isPresent
         );
-        const messages = await getMessages(roomId);
-        console.log(messages);
+        const messages = (await getMessages(roomId)).map((ea) => {
+            return {
+                content: ea.message,
+                timeStamp: ea.created_at,
+                author: ea.user_id,
+            };
+        });
+
         const participants = (await getParticipants(roomId)).reduce(
             (acc, curr) => {
                 acc[curr.user_id] = { ...curr };
@@ -44,14 +50,6 @@ export const roomHandler = (socket) => {
             },
             {}
         );
-
-        // let mapped = participants.reduce((acc, curr) => {
-        //     acc[curr.user_id] = {}
-        //     return acc
-        // }, {})
-
-        // if (!rooms[roomId]) rooms[roomId] = {};
-        // if (!chats[roomId]) chats[roomId] = [];
 
         // Keeps user-joined from refiring when screen-sharing and allows user to rejoin if disconnected
         if (newParticipant || !participants[peerId]?.is_present) {
@@ -79,33 +77,25 @@ export const roomHandler = (socket) => {
     };
 
     const addMessage = (roomId, messageData) => {
-        insertMessage(roomId, messageData.author, messageData.content)
+        insertMessage(roomId, messageData.author, messageData.content);
         socket.to(roomId).emit("add-message", messageData);
     };
 
     const changeName = ({ peerId, userName, roomId }) => {
-        if (rooms[roomId] && rooms[roomId][peerId]) {
-            rooms[roomId][peerId].userName = userName;
-            socket.to(roomId).emit("name-changed", { peerId, userName });
-        }
+        setName(roomId, peerId, userName);
+        socket.to(roomId).emit("name-changed", { peerId, userName });
     };
 
     const toggleShowingVideo = ({ peerId, roomId, sharingVideo }) => {
-        if (rooms[roomId] && rooms[roomId][peerId]) {
-            rooms[roomId][peerId].sharingVideo = sharingVideo;
-            socket
-                .to(roomId)
-                .emit("toggled-showing-video", { peerId, sharingVideo });
-        }
+        setSharingVideo(roomId, peerId, sharingVideo);
+        socket
+            .to(roomId)
+            .emit("toggled-showing-video", { peerId, sharingVideo });
     };
 
     const toggleSharingMic = ({ peerId, roomId, sharingMic }) => {
-        if (rooms[roomId] && rooms[roomId][peerId]) {
-            rooms[roomId][peerId].sharingMic = sharingMic;
-            socket
-                .to(roomId)
-                .emit("toggled-sharing-mic", { peerId, sharingMic });
-        }
+        setSharingMic(roomId, peerId, sharingMic);
+        socket.to(roomId).emit("toggled-sharing-mic", { peerId, sharingMic });
     };
 
     socket.on("create-room", createRoom);
