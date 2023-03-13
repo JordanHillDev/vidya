@@ -18,15 +18,16 @@ ReactDOM.render(
             <RoomProvider>
                 <Routes>
                     <Route path="/" element={<Home />} />
-                    <Route
-                        path="room/:id"
-                        // exact={true}
-                        element={
-                            <ChatProvider>
-                                <Room />
-                            </ChatProvider>
-                        }
-                    />
+                    <Route path="/room">
+                        <Route
+                            path=":id"
+                            element={
+                                <ChatProvider>
+                                    <Room />
+                                </ChatProvider>
+                            }
+                        />
+                    </Route>
                 </Routes>
             </RoomProvider>
         </UserProvider>
