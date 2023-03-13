@@ -18,7 +18,14 @@ ReactDOM.render(
             <RoomProvider>
                 <Routes>
                     <Route path="/" element={<Home />} />
-
+                    <Route
+                        path="room"
+                        element={
+                            <ChatProvider>
+                                <Room />
+                            </ChatProvider>
+                        }
+                    />
                     <Route
                         path="room/:id"
                         element={
