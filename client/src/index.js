@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 // Context
 import { UserProvider } from "./context/UserContext";
 import { RoomProvider } from "./context/RoomContext";
@@ -13,12 +13,11 @@ import "./index.css";
 import "react-tooltip/dist/react-tooltip.css";
 
 ReactDOM.render(
-    <BrowserRouter>
+    <HashRouter>
         <UserProvider>
             <RoomProvider>
                 <Routes>
                     <Route path="/" element={<Home />} />
-                    <Route path="/:id" element={<Home />} />
                     <Route
                         path="/room/:id"
                         element={
@@ -30,6 +29,6 @@ ReactDOM.render(
                 </Routes>
             </RoomProvider>
         </UserProvider>
-    </BrowserRouter>,
+    </HashRouter>,
     document.getElementById("root")
 );
