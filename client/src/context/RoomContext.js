@@ -50,13 +50,13 @@ export const RoomProvider = ({ children }) => {
     const [peers, dispatch] = useReducer(peersReducer, {});
 
     const getUsers = ({ participants }) => {
+        console.log(participants)
         dispatch(addAllPeersAction(participants));
     };
 
     const removePeer = (peerId) => {
         dispatch(removePeerStreamAction(peerId));
     };
-
     
     const nameChangedHandler = ({ peerId, userName }) => {
         dispatch(addPeerNameAction(peerId, userName));

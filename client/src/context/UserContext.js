@@ -10,6 +10,7 @@ export const UserProvider = ({ children }) => {
     );
     const [sharingVideo, setSharingVideo] = useState(false);
     const [sharingMic, setSharingMic] = useState(false);
+    const [isPresent, setIsPresent] = useState(false)
 
     const toggleSharingVideo = () => {
         setSharingVideo((curr) => !curr)
@@ -38,7 +39,9 @@ export const UserProvider = ({ children }) => {
                 toggleSharingVideo,
                 sharingMic,
                 setSharingMic,
-                toggleSharingMic
+                toggleSharingMic,
+                isPresent,
+                setIsPresent
             }}
         >
             {children}
