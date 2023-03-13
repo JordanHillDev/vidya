@@ -14,6 +14,7 @@ import { ws } from "../ws";
 
 const Room = () => {
     const { id } = useParams();
+    console.log(id)
     const { stream, setRoomId } = useContext(RoomContext);
     const { userName, userId, isPresent, } = useContext(UserContext);
     const { toggleChat, chat } = useContext(ChatContext);
