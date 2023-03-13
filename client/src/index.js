@@ -10,7 +10,7 @@ import Home from "./pages/Home";
 import Room from "./pages/Room";
 // Styles
 import "./index.css";
-import 'react-tooltip/dist/react-tooltip.css'
+import "react-tooltip/dist/react-tooltip.css";
 
 ReactDOM.render(
     <BrowserRouter>
@@ -20,6 +20,7 @@ ReactDOM.render(
                     <Route path="/" element={<Home />} />
                     <Route
                         path="/room/:id"
+                        exact={true}
                         element={
                             <ChatProvider>
                                 <Room />
